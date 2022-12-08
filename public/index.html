@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link
+			rel="stylesheet"
+			href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css"
+			integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk="
+			crossorigin="anonymous"
+	/>
+    
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
+    <link rel="stylesheet" href="style.css">
+    <title class="title1">KryptChat</title>
+    <link rel="apple-touch-icon" sizes="180x180" href="assets/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="assets/favicon-16x16.png">
+    <link rel="manifest" href="assets/site.webmanifest">
+    <script src="https://kit.fontawesome.com/d3077d703e.js" crossorigin="anonymous"></script>
+    <link href="https://fonts.googleapis.com/css?family=Merriweather|Montserrat|Sacramento" rel="stylesheet">
+</head>
+<body>
+    <div class="container main-container bg-light ">
+        <header class="mb-3 p-2 text-center text-white">
+            <h1 class="titlebox1">KryptChat</h1>
+        </header>
+        <main class="join-main">
+            <form action="chat.html" id="joinChat">
+                <div class=" bg-transparent">
+                    <div class="mb-3 row">
+                        <label for="username" class="col-sm-2 col-form-label font-weight-bold">Username</label>
+                        <div class="col-sm-8">
+                          <input type="text" class="form-control" id="username" name="username" placeholder="Enter alias to enter the chat" required>
+                        </div>
+                      </div>
+                </div>
+                <div class=" bg-transparent">
+                    <div class="mb-3 row">
+                        <label for="keyword" class="col-sm-2 col-form-label font-weight-bold">Keyword</label>
+                        <div class="col-sm-8">
+                          <input type="number" class="form-control" id="keyword" name="keyword" placeholder="Enter a keyword for encryption" required>
+                        </div>
+                      </div>
+                </div>
+                <div class=" bg-transparent">
+                    <div class="mb-3 row">
+                        <label for="room" class="col-sm-2 col-form-label font-weight-bold">Room</label>
+                        <div class="col-sm-8">
+                          <input type="text" class="form-control" id="room" name="room" placeholder="Enter a Room name" required>
+                        </div>
+                    </div>
+                </div>
+                
+                <button class="btn btn-lg w-50" id="joinBtn">Create/Join Room</button>
+            </form>
+
+        </main>
+    </div>
+
+
+<script src="url.js"></script>
+<!-- <script src="app.js"></script> -->
+
+    <!-- <script src="app.js"></script> -->
+    <!-- Additional JS Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-OERcA2EqjJCMA+/3y+gxIOqMEjwtxJY7qPCqsdltbNJuaOe923+mo//f6V8Qbsw3" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js" integrity="sha384-oBqDVmMz9ATKxIep9tiCxS/Z9fNfEXiDAYTujMAeBAsjFuCZSmKbSSUnQlmh/jp3" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.min.js" integrity="sha384-IDwe1+LCz02ROU9k972gdyvl+AESN10+x7tBKgc9I5HFtuNz0wWnPclzo6p9vxnk" crossorigin="anonymous"></script>
+
+</body>
+</html>
