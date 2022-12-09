@@ -77,6 +77,15 @@ h5{
 	letter-spacing: 2px;
 
 }
+.titlebox-9{
+	font-family: 'reckoner';
+	font-size: 3.5rem;
+	margin-top: 20px;
+	margin-bottom: 30px;
+	text-align: center;
+	letter-spacing: 2px;
+
+}
 .dots{
 	display: none;
 }
@@ -199,7 +208,7 @@ h5{
 	.titlebox1{
 		margin:0;
 		height: 7vh;
-		font-size: 2em;
+		font-size: 1.5em;
 		text-align: left;
 	}
 
@@ -209,7 +218,7 @@ h5{
 		display: block;
 		position: fixed;
 		right:0;
-		top:1px;
+		top:7px;
 	}
 
 	.main-container{
