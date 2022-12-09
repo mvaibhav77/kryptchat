@@ -234,12 +234,43 @@ function decryptChat(decryptKey){
     }
 }
 
-// console.log(String.fromCharCode(66)+String.fromCharCode(10)+String.fromCharCode(67));
+// Sidemenu Collapse and appear button
 
+const collapse =document.getElementById('collapse');
+const sidemenu = document.querySelector('.chat-sidebar');
+collapse.addEventListener('click', (e)=>{
+    e.preventDefault();
+    if(sidemenu.classList.contains('hidden')){
+        sidemenu.classList.remove('hidden');
+        collapse.innerHTML = '<i class="fa fa-xmark"></i>'
+    }else{
+        sidemenu.classList.add('hidden');
+        collapse.innerHTML = '<i class="fa fa-bars"></i>'
+    }
+})
 
+document.addEventListener('DOMContentLoaded' ,(e)=>{
+    if(window.innerWidth < 576){
+        if(!sidemenu.classList.contains('hidden')){
+            sidemenu.classList.add('hidden');
+        }
+    }else{
+        if(sidemenu.classList.contains('hidden')){
+            sidemenu.classList.remove('hidden');
+        }
+    }
+})
 
-
-// Testing the encryption
-// console.log('ABCDEFGHIJKLMNOPQRSTUVWXYZ abcdefghijklmnopqrstuvwxyz 1234567890 !@#$%^&*()_+<>?:"{}[]-=')
-// console.log(decryptMsg(encryptMsg('ABCDEFGHIJKLMNOPQRSTUVWXYZ abcdefghijklmnopqrstuvwxyz 1234567890 !@#$%^&*()_+<>?:"{}[]-=',key), key))
-// console.log(encryptMsg('ABCDEFGHIJKLMNOPQRSTUVWXYZ abcdefghijklmnopqrstuvwxyz 1234567890 !@#$%^&*()_+<>?:"{}[]-=',key))
+window.addEventListener('resize',(e)=>{
+    e.preventDefault();
+    
+    if(window.innerWidth < 576){
+        if(!sidemenu.classList.contains('hidden')){
+            sidemenu.classList.add('hidden');
+        }
+    }else{
+        if(sidemenu.classList.contains('hidden')){
+            sidemenu.classList.remove('hidden');
+        }
+    }
+})
