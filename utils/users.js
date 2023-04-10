@@ -1,7 +1,7 @@
 const users =[];
 
 // join user to chat
-function userJoin(id,username, room, keyword){
+function userJoin(id,username, room, keyword, privKey, pubKey){
     const count = users.filter(user=> user.id=== id).length;
     
     if(count > 1){
@@ -9,14 +9,22 @@ function userJoin(id,username, room, keyword){
         return user;
 
     }else{
-        const user = {id,username,room, keyword};
+        const user = {id,username,room, keyword, privKey, pubKey};
         users.push(user);
         return user;
     }
-
-
 }
 
+function countUsers(room){
+    let count=0;
+    users.forEach((user)=>{
+        if(user.room==room[0].roomName){
+            count++;
+        }
+    });
+
+    return count;
+}
 
 // Get current user
 function getCurrentUser(id){
@@ -42,4 +50,13 @@ module.exports = {
     getCurrentUser,
     userLeave,
     getRoomUsers,
+    countUsers
 }
+
+// export defualt {
+//     userJoin,
+//     getCurrentUser,
+//     userLeave,
+//     getRoomUsers,
+//     countUsers
+// }
