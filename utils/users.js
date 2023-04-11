@@ -2,7 +2,7 @@ const users =[];
 
 // join user to chat
 function userJoin(id,username, room, keyword, privKey, pubKey){
-    const count = users.filter(user=> user.id=== id).length;
+    const count = users.filter(user=> user.id === id).length;
     
     if(count > 1){
         const user = {}
@@ -46,6 +46,7 @@ function getRoomUsers(room){
 }
 
 module.exports = {
+    users,
     userJoin,
     getCurrentUser,
     userLeave,
