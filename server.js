@@ -3,12 +3,13 @@ const express = require('express');
 const http = require('http');
 const socketio = require('socket.io');
 const formatMessage = require('./utils/msgs');
-const {userJoin, getCurrentUser, userLeave, getRoomUsers,countUsers} = require('./utils/users');
+const {userJoin, getCurrentUser, userLeave, getRoomUsers,countUsers, users} = require('./utils/users');
 const {roomCreated, getRooms, removeCurrentRoom} = require('./utils/rooms');
 const app = express();
 const server = http.createServer(app);
 const io = socketio(server);
 const NodeRSA = require('node-rsa');
+const e = require('express');
 
 
 
@@ -18,10 +19,10 @@ const NodeRSA = require('node-rsa');
 // const text = 'Hello RSA!';
 // const keycode = 'hihi';
 // try {
-//     const encrypted = key.encrypt(text, 'base64');
-//     console.log('encrypted: ', encrypted, typeof(encrypted));
-//     const decrypted = key.decrypt(encrypted, 'utf8');
-//     console.log('decrypted: ', decrypted);
+    // const encrypted = key.encrypt(text, 'base64');
+    // console.log('encrypted: ', encrypted, typeof(encrypted));
+    // const decrypted = key.decrypt(encrypted, 'utf8');
+    // console.log('decrypted: ', decrypted);
 //     console.log(key);
 // } catch (error) {
 //     console.log(error);
@@ -43,8 +44,6 @@ io.on('connection', socket => {
         const pubKey = key.exportKey("public");
         const user = userJoin(socket.id, username, room ,keyword, privKey, pubKey);
         const rooms = getRooms();
-        // console.log(privKey)
-        // console.log(pubKey)
         let flag=0;
         if(rooms.length!==0){
             rooms.forEach(roomOld =>{
@@ -62,14 +61,13 @@ io.on('connection', socket => {
         // console.log(curRoom);
 
         if(countUsers(curRoom)<3){
-            socket.emit('encrypting', room);
             const Rooms = getRooms();
             // console.log(0);
             console.log(Rooms);
     
             socket.join(user.room);
             console.log(countUsers(curRoom))
-    
+            socket.emit('encrypting', user);
             // Welcome current user
             socket.emit('message', formatMessage(botName,'Welcome to KryptChat')); // to a single user
     
@@ -90,18 +88,24 @@ io.on('connection', socket => {
 
 
     // Listen for user message
-    socket.on('chatMessage', msg=>{
-        const user = getCurrentUser(socket.id);
-        
-        console.log(user);
-        io.to(user.room).emit('message', ()=>{
-            formatMessage(user.username,msg);
+    socket.on('chatMessage', (args)=>{
+        console.log('hello', args.msg)
+        const from = getCurrentUser(socket.id);
+        const to = users.filter(user=> {
+            return user.room === from.room && user.id !== socket.id;
         });
+        console.log(to[0]);
+        socket.broadcast.to(from.room).emit('message', encryptFormat(to[0], from, args.msg));
+        socket.emit('message', formatMessage(from.username,args.msg))
     })
+
+    socket.on('decrypting', (args)=>{
+        const decr = decrypting(args.msg, args.pkey);
+        socket.emit('catchingDecr', decr)
+    });
 
     // broadcast when user disconnects
     socket.on('disconnect', ()=>{
-
         const user = userLeave(socket.id);
 
         if(user){
@@ -120,6 +124,42 @@ io.on('connection', socket => {
     });
 });
 
+
+const encryptMsg = (to, message)=>{
+    // const Pbkey = new NodeRSA(to);
+    const encrypted = to.encrypt(message, 'base64');
+    // console.log('encrypted: ', encrypted);
+    return encrypted;
+
+}       
+
+const decryptMsg = (to,message)=>{
+    const Prkey = new NodeRSA(to); 
+    const decrypted = Prkey.decrypt(message, 'utf8');
+    console.log('decrypted: ', decrypted);
+    return decrypted;
+}
+
+const encryptFormat = (to, from, msg)=> {
+    // console.log(pkey)
+    const pbKey = new NodeRSA(to.pubKey);
+    const enc = encryptMsg(pbKey, msg);
+    return formatMessage(from.username, enc)
+    // return decrypting(enc,from,to.privKey);
+}
+
+const decrypting = (msg,pkey)=>{
+    try{
+        const decr = decryptMsg(pkey, msg);
+        return decr
+    }
+    catch(err){
+        console.log(err);
+    }finally{
+        return msg;
+    }
+
+}
 
 const PORT = 5000 || process.env.PORT;
 

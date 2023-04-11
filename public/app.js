@@ -11,18 +11,30 @@ const socket = io();
 
 
 let encryptKey;
+let userPrivKey = '';
 // Encrypt on room creation
-socket.on('encrypting', room=>{
+socket.on('encrypting', user=>{
     // encryptKey = Number(room[0].keycode);
     // encryptKey=encryptKey%11;
     // console.log(encryptKey);
+    // console.log(user.privKey);
+    userPrivKey = user.privKey;
+    // console.log(userPrivKey);
 })
 
+
+
+
 // msg creation
-function msgCreated(name,time, text){
+function msgCreated(name, time, text){
     // name = encryptMsg(name,encryptKey);
     // time = encryptMsg(time,encryptKey);
     // text = encryptMsg(text,encryptKey);
+    if(name !== 'KryptChat Bot'){
+        console.log(userPrivKey);
+        text  = decryptClient(text, userPrivKey);
+        console.log('usermsg');
+    }
     const message = {name,time, text};
     messageBodies.push(message);
     outputMessage(message);
@@ -69,10 +81,11 @@ socket.on('roomUsers', ({room,users}) =>{
     // outputKeyword(keyword);
 })
 
+
 // Message from server
 socket.on('message', message=>{
     // console.log(message);
-        msgCreated(message.user,message.time,message.text);
+        msgCreated(message.user, message.time, message.text);
     // // DecryptAll();
     // Scroll down
     chatMessages.scrollTop = chatMessages.scrollHeight;
@@ -85,7 +98,8 @@ chatForm.addEventListener('submit', e =>{
     const msg = e.target.elements.msg.value;
 
     // emitting a message to server
-    socket.emit('chatMessage', msg);
+    // console.log(userPrivKey);
+    socket.emit('chatMessage', {msg: msg});
     e.target.elements.msg.value='';
     e.preventDefault();
 })
@@ -117,6 +131,20 @@ function outputUserNames(users){
 
     document.querySelector('#users').innerHTML=output;
 }
+
+
+// Decrypt on client side
+const decryptClient = (msg,pkey)=>{
+    socket.emit('decrypting', {msg,pkey});
+    socket.on('catchingDecr', (decrMsg)=>{
+        console.log(msg, decrMsg);
+        msg = decrMsg;
+    })
+
+    return msg;
+}
+
+
 
 // Output keyword
 // function outputKeyword(keyword){
