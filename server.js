@@ -144,10 +144,17 @@ const encryptFormat = (to, from, msg)=> {
     // console.log(pkey)
     const pbKey = new NodeRSA(to.pubKey);
     const enc = encryptMsg(pbKey, msg);
-    return formatMessage(from.username, enc)
-    // return decrypting(enc,from,to.privKey);
+    // return formatMessage(from.username, enc)
+    return decryptFormat(enc,from,to.privKey);
 }
 
+const decryptFormat = (msg,from,prKey)=>{
+    // const pKey = new NodeRSA(prKey);
+    const decr = decryptMsg(prKey, msg);
+    console.log(decr);
+    return formatMessage(from.username, decr);
+
+}
 const decrypting = (msg,pkey)=>{
     try{
         const decr = decryptMsg(pkey, msg);

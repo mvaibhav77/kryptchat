@@ -30,11 +30,11 @@ function msgCreated(name, time, text){
     // name = encryptMsg(name,encryptKey);
     // time = encryptMsg(time,encryptKey);
     // text = encryptMsg(text,encryptKey);
-    if(name !== 'KryptChat Bot'){
-        console.log(userPrivKey);
-        text  = decryptClient(text, userPrivKey);
-        console.log('usermsg');
-    }
+    // if(name !== 'KryptChat Bot'){
+    //     console.log(userPrivKey);
+    //     text  = decryptClient(text, userPrivKey);
+    //     console.log('usermsg');
+    // }
     const message = {name,time, text};
     messageBodies.push(message);
     outputMessage(message);
@@ -134,15 +134,15 @@ function outputUserNames(users){
 
 
 // Decrypt on client side
-const decryptClient = (msg,pkey)=>{
-    socket.emit('decrypting', {msg,pkey});
-    socket.on('catchingDecr', (decrMsg)=>{
-        console.log(msg, decrMsg);
-        msg = decrMsg;
-    })
+// const decryptClient = (msg,pkey)=>{
+//     socket.emit('decrypting', {msg,pkey});
+//     socket.on('catchingDecr', (decrMsg)=>{
+//         console.log(msg, decrMsg);
+//         msg = decrMsg;
+//     })
 
-    return msg;
-}
+//     return msg;
+// }
 
 
 
