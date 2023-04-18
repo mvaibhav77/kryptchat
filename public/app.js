@@ -8,33 +8,25 @@ function getMessages(){
 const socket = io();
 
 
-
-
 let encryptKey;
 let userPrivKey = '';
 // Encrypt on room creation
-socket.on('encrypting', user=>{
-    // encryptKey = Number(room[0].keycode);
-    // encryptKey=encryptKey%11;
-    // console.log(encryptKey);
-    // console.log(user.privKey);
-    userPrivKey = user.privKey;
+socket.on('encrypting', args=>{
+    console.log(args);
+    encryptKey = Number(args.room[0].keycode);
+    encryptKey=encryptKey%11;
+    console.log(encryptKey);
+    // console.log(args.user.privKey);
+    userPrivKey = args.user.privKey;
     // console.log(userPrivKey);
 })
 
 
-
-
 // msg creation
 function msgCreated(name, time, text){
-    // name = encryptMsg(name,encryptKey);
-    // time = encryptMsg(time,encryptKey);
-    // text = encryptMsg(text,encryptKey);
-    // if(name !== 'KryptChat Bot'){
-    //     console.log(userPrivKey);
-    //     text  = decryptClient(text, userPrivKey);
-    //     console.log('usermsg');
-    // }
+    name = encryptMsg(name,encryptKey);
+    time = encryptMsg(time,encryptKey);
+    text = encryptMsg(text,encryptKey);
     const message = {name,time, text};
     messageBodies.push(message);
     outputMessage(message);
@@ -78,19 +70,36 @@ socket.emit('joinRoom', {username, room, keyword});
 socket.on('roomUsers', ({room,users}) =>{
     outputRoomName(room);
     outputUserNames(users);
-    // outputKeyword(keyword);
+    outputKeyword(keyword);
 })
 
 
 // Message from server
 socket.on('message', message=>{
-    // console.log(message);
-        msgCreated(message.user, message.time, message.text);
-    // // DecryptAll();
+    console.log(message);
+    msgCreated(message.user, message.time, message.text);
+    DecryptAll();
     // Scroll down
     chatMessages.scrollTop = chatMessages.scrollHeight;
 });
 
+let decryptKey = keyword;
+decryptKey = Number(decryptKey)
+// decrypt on click
+decrypt.addEventListener('click',(e)=>{
+    DecryptAll();
+})
+
+function DecryptAll(){
+    const code = document.getElementById('keywordValue').value
+    if(code){
+        decryptKey = code;
+    }
+    console.log(decryptKey)
+    decryptKey= Number(decryptKey);
+    decryptKey = decryptKey%11;
+    decryptChat(decryptKey);
+}
 
 
 // Message submit
@@ -133,116 +142,103 @@ function outputUserNames(users){
 }
 
 
-// Decrypt on client side
-// const decryptClient = (msg,pkey)=>{
-//     socket.emit('decrypting', {msg,pkey});
-//     socket.on('catchingDecr', (decrMsg)=>{
-//         console.log(msg, decrMsg);
-//         msg = decrMsg;
-//     })
-
-//     return msg;
-// }
-
-
-
 // Output keyword
-// function outputKeyword(keyword){
-//     document.querySelector('#keywordValue').value=keyword;
-// }
+function outputKeyword(keyword){
+    document.querySelector('#keywordValue').value=keyword;
+}
 
 
 // Encription and Decription
 
 // Encription
-// function encryptMsg(msg, key){
-//     let output='';
-//     for(let i=0;i<msg.length;i++){
-//         if (msg.charCodeAt(i)>=65 && msg.charCodeAt(i)<=90){
-//             let tempstr = msg.charCodeAt(i) + key;
-//             if(tempstr>90){
-//                 tempstr=tempstr%90 +64;
-//             }
-//             output += String.fromCodePoint(tempstr);
-//         }else if(msg.charCodeAt(i)>=97 && msg.charCodeAt(i)<=122){
-//             let tempstr = msg.charCodeAt(i) + key;
-//             if(tempstr>122){
-//                 tempstr = tempstr%122 + 96;
-//             }
-//             output += String.fromCodePoint(tempstr);
-//         }else{
-//             output += String.fromCodePoint(msg.charCodeAt(i) + key);
-//         }
-//     }
-//     return output;
-// }
+function encryptMsg(msg, key){
+    let output='';
+    for(let i=0;i<msg.length;i++){
+        if (msg.charCodeAt(i)>=65 && msg.charCodeAt(i)<=90){
+            let tempstr = msg.charCodeAt(i) + key;
+            if(tempstr>90){
+                tempstr=tempstr%90 +64;
+            }
+            output += String.fromCodePoint(tempstr);
+        }else if(msg.charCodeAt(i)>=97 && msg.charCodeAt(i)<=122){
+            let tempstr = msg.charCodeAt(i) + key;
+            if(tempstr>122){
+                tempstr = tempstr%122 + 96;
+            }
+            output += String.fromCodePoint(tempstr);
+        }else{
+            output += String.fromCodePoint(msg.charCodeAt(i) + key);
+        }
+    }
+    return output;
+}
 
 // // Decryption
-// function decryptMsg(ptr,key1){
-//     // console.log(ptr, key1);
-//     let dncstring = "";
-//     for(let i=0;i<ptr.length;i++){
-//         if(ptr.charCodeAt(i)>=65 && ptr.charCodeAt(i)<=90){
-//             if(ptr.charCodeAt(i)>(64+key1)){
-//                 dncstring += String.fromCodePoint((ptr.charCodeAt(i)-key1-65)%26+65);
-//             }else{
-//                 dncstring+= String.fromCharCode((ptr.charCodeAt(i))%64 -key1+90);
-//             }
-//             // console.log(dncstring);
-//         }else if((ptr.charCodeAt(i))>=97 && (ptr.charCodeAt(i)<=122)){
-//             if(ptr.charCodeAt(i)>(96+key1)){
-//                 dncstring += String.fromCodePoint((ptr.charCodeAt(i)-key1-97)%26+97);
-//             }else{
-//                 dncstring+= String.fromCharCode((ptr.charCodeAt(i))%96 -key1+122);
-//             }
-//             // console.log(dncstring);
-//         }else{
-//             dncstring+= String.fromCodePoint(ptr.charCodeAt(i)-key1)
-//             // console.log(dncstring);
+function decryptMsg(ptr,key1){
+    // console.log(ptr, key1);
+    let dncstring = "";
+    for(let i=0;i<ptr.length;i++){
+        if(ptr.charCodeAt(i)>=65 && ptr.charCodeAt(i)<=90){
+            if(ptr.charCodeAt(i)>(64+key1)){
+                dncstring += String.fromCodePoint((ptr.charCodeAt(i)-key1-65)%26+65);
+            }else{
+                dncstring+= String.fromCharCode((ptr.charCodeAt(i))%64 -key1+90);
+            }
+            // console.log(dncstring);
+        }else if((ptr.charCodeAt(i))>=97 && (ptr.charCodeAt(i)<=122)){
+            if(ptr.charCodeAt(i)>(96+key1)){
+                dncstring += String.fromCodePoint((ptr.charCodeAt(i)-key1-97)%26+97);
+            }else{
+                dncstring+= String.fromCharCode((ptr.charCodeAt(i))%96 -key1+122);
+            }
+            // console.log(dncstring);
+        }else{
+            dncstring+= String.fromCodePoint(ptr.charCodeAt(i)-key1)
+            // console.log(dncstring);
 
-//         }
-//     }
-//     return dncstring;
-// }
+        }
+    }
+    return dncstring;
+}
 
-// // let key = 13;
-// // key = key%9;
-// // console.log(key);
-// // console.log(encryptMsg('hi123',key));
-// // console.log(decryptMsg(encryptMsg('hi123',key),key));
+// let key = 13;
+// key = key%9;
+// console.log(key);
+// console.log(encryptMsg('hi123',key));
+// console.log(decryptMsg(encryptMsg('hi123',key),key));
 
 // // encrypting messages
 
-// // function encryptChat(){
-// //     let msgElements;
-// //     for(let i=0;i<messages.length;i++){
-// //         // console.log(messages[i].innerText);
-// //         msgElements = messages[i].children;
-// //         for(let j=0;j<msgElements.length;j++){
-// //             msgElements[j].innerText = encryptMsg(msgElements[j].innerText, encryptKey);
-// //             // console.log(msgElements[j].innerText, j)
-// //         }
-// //         msgCreated(msgElements[0].innerText,msgElements[1].innerText,msgElements[2].innerText)
-
-// //         // console.log(msgElements[1].innerText)
-// //     }
-// //     console.log(getMessages());
-// // }
-
-// function decryptChat(decryptKey){
+// function encryptChat(){
 //     let msgElements;
-//     console.log(decryptKey)
 //     for(let i=0;i<messages.length;i++){
 //         // console.log(messages[i].innerText);
-//         let message = getMessages()[i];
 //         msgElements = messages[i].children;
-//         // console.log(decryptKey);
-//         msgElements[0].innerText = decryptMsg(message.name, decryptKey);
-//         msgElements[1].innerText = ' '+decryptMsg(message.time, decryptKey);
-//         msgElements[2].innerText = decryptMsg(message.text, decryptKey);
+//         for(let j=0;j<msgElements.length;j++){
+//             msgElements[j].innerText = encryptMsg(msgElements[j].innerText, encryptKey);
+//             // console.log(msgElements[j].innerText, j)
+//         }
+//         msgCreated(msgElements[0].innerText,msgElements[1].innerText,msgElements[2].innerText)
 
+//         // console.log(msgElements[1].innerText)
 //     }
+//     console.log(getMessages());
 // }
+
+function decryptChat(decryptKey){
+    let msgElements;
+    console.log(decryptKey)
+    for(let i=0;i<messages.length;i++){
+        // console.log(messages[i].innerText);
+        let message = getMessages()[i];
+        msgElements = messages[i].children;
+        // console.log(decryptKey);
+        msgElements[0].innerText = decryptMsg(message.name, decryptKey);
+        msgElements[1].innerText = ' '+decryptMsg(message.time, decryptKey);
+        msgElements[2].innerText = decryptMsg(message.text, decryptKey);
+
+    }
+}
 
 // Sidemenu Collapse and appear button
 

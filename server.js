@@ -12,23 +12,6 @@ const NodeRSA = require('node-rsa');
 const e = require('express');
 
 
-
-// NodeRSA
-// const key = new NodeRSA({b: 528});
- 
-// const text = 'Hello RSA!';
-// const keycode = 'hihi';
-// try {
-    // const encrypted = key.encrypt(text, 'base64');
-    // console.log('encrypted: ', encrypted, typeof(encrypted));
-    // const decrypted = key.decrypt(encrypted, 'utf8');
-    // console.log('decrypted: ', decrypted);
-//     console.log(key);
-// } catch (error) {
-//     console.log(error);
-// }
-
-
 // Static Folder
 app.use(express.static(path.join(__dirname, 'public')))
 
@@ -67,7 +50,7 @@ io.on('connection', socket => {
     
             socket.join(user.room);
             console.log(countUsers(curRoom))
-            socket.emit('encrypting', user);
+            socket.emit('encrypting', {room: curRoom,user: user});
             // Welcome current user
             socket.emit('message', formatMessage(botName,'Welcome to KryptChat')); // to a single user
     
