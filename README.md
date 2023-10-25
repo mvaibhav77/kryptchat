@@ -96,6 +96,6 @@ We value feedback from our users and the open-source community. If you encounter
 
 KryptChat is an open-source project and is licensed under the [MIT License](LICENSE). You are free to use, modify, and distribute the code as per the terms specified in the license.
 
----
+----
 
 Thank you for exploring KryptChat! We hope you find this platform useful for secure and private communication. Together, let's contribute to a safer digital environment. 🛡️🔒
